@@ -9,7 +9,7 @@ function Welcome() {
           color: 'text',
           fontFamily: 'heading',
         }}>
-        Welcome
+        hello
       </h1>
     </div>
   )

@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 8052:3000
+    environment:
+      - AWS_IDENTITY_POOL_ID=${AWS_IDENTITY_POOL_ID}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_USER_POOL_ID=${AWS_USER_POOL_ID}
+      - AWS_USER_POOL_CLIENT=${AWS_USER_POOL_CLIENT}
+      - AWS_APPSYNC_ENDPOINT=${AWS_APPSYNC_ENDPOINT}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+    volumes:
+      - .:/usr/src/app

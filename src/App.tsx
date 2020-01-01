@@ -9,6 +9,9 @@ import {
 import Welcome from 'screens/welcome'
 import HomeScreen from 'screens/home'
 import FacebookCallBack from 'screens/facebook'
+import configureAmplify from 'config/amplify'
+
+configureAmplify()
 
 function App() {
   return (
