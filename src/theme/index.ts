@@ -1,111 +1,196 @@
 export default {
-  space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
-  fonts: {
-    body: 'Georgia',
-    heading: 'Open Sans',
-    monospace: 'Menlo, monospace',
+  "colors": {
+    "text": "hsl(10, 20%, 20%)",
+    "background": "hsl(10, 10%, 98%)",
+    "primary": "hsl(10, 80%, 50%)",
+    "secondary": "hsl(10, 60%, 50%)",
+    "highlight": "hsl(10, 40%, 90%)",
+    "purple": "hsl(250, 60%, 30%)",
+    "muted": "hsl(10, 20%, 94%)",
+    "gray": "hsl(10, 20%, 50%)"
   },
-  fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
-  fontWeights: {
-    body: 400,
-    heading: 700,
-    bold: 700,
+  "fonts": {
+    "body": "system-ui, sans-serif",
+    "heading": "inherit",
+    "monospace": "Menlo, monospace"
   },
-  lineHeights: {
-    body: 1.5,
-    heading: 1.125,
+  "fontSizes": [
+    12,
+    14,
+    16,
+    20,
+    24,
+    32,
+    48,
+    64,
+    72
+  ],
+  "fontWeights": {
+    "body": 400,
+    "heading": 700,
+    "display": 900
   },
-  colors: {
-    text: '#404041',
-    background: '#fff',
-    primary: '#6c2d8d',
-    secondary: '#30c',
-    muted: '#f6f6f6',
-    heading: '#6c2d8d',
+  "lineHeights": {
+    "body": 1.5,
+    "heading": 1.25
   },
-  styles: {
-    root: {
-      fontFamily: 'body',
-      lineHeight: 'body',
-      fontWeight: 'body',
+  "textStyles": {
+    "heading": {
+      "fontFamily": "heading",
+      "fontWeight": "heading",
+      "lineHeight": "heading"
     },
-    h1: {
-      color: 'heading',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
-      fontSize: 5,
+    "display": {
+      "variant": "textStyles.heading",
+      "fontSize": [
+        5,
+        6
+      ],
+      "fontWeight": "display",
+      "letterSpacing": "-0.03em",
+      "mt": 3
+    }
+  },
+  "styles": {
+    "Container": {
+      "p": 3,
+      "maxWidth": 1024
     },
-    h2: {
-      color: 'text',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
-      fontSize: 4,
+    "root": {
+      "fontFamily": "body",
+      "lineHeight": "body",
+      "fontWeight": "body"
     },
-    h3: {
-      color: 'text',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
-      fontSize: 3,
+    "h1": {
+      "variant": "textStyles.display"
     },
-    h4: {
-      color: 'text',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
-      fontSize: 2,
+    "h2": {
+      "variant": "textStyles.heading",
+      "fontSize": 5
     },
-    h5: {
-      color: 'text',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
+    "h3": {
+      "variant": "textStyles.heading",
+      "fontSize": 4
+    },
+    "h4": {
+      "variant": "textStyles.heading",
+      "fontSize": 3
+    },
+    "h5": {
+      "variant": "textStyles.heading",
+      "fontSize": 2
+    },
+    "h6": {
+      "variant": "textStyles.heading",
+      "fontSize": 1
+    },
+    "a": {
+      "color": "primary",
+      "&:hover": {
+        "color": "secondary"
+      }
+    },
+    "pre": {
+      "variant": "prism",
+      "fontFamily": "monospace",
+      "fontSize": 1,
+      "p": 3,
+      "color": "text",
+      "bg": "muted",
+      "overflow": "auto",
+      "code": {
+        "color": "inherit"
+      }
+    },
+    "code": {
+      "fontFamily": "monospace",
+      "color": "secondary",
+      "fontSize": 1
+    },
+    "inlineCode": {
+      "fontFamily": "monospace",
+      "color": "secondary",
+      "bg": "muted"
+    },
+    "table": {
+      "width": "100%",
+      "my": 4,
+      "borderCollapse": "separate",
+      "borderSpacing": 0,
+      "th,td": {
+        "textAlign": "left",
+        "py": "4px",
+        "pr": "4px",
+        "pl": 0,
+        "borderColor": "muted",
+        "borderBottomStyle": "solid"
+      }
+    },
+    "th": {
+      "verticalAlign": "bottom",
+      "borderBottomWidth": "2px"
+    },
+    "td": {
+      "verticalAlign": "top",
+      "borderBottomWidth": "1px"
+    },
+    "hr": {
+      "border": 0,
+      "borderBottom": "1px solid",
+      "borderColor": "muted"
+    },
+    "img": {
+      "maxWidth": "100%"
+    }
+  },
+  "prism": {
+    ".comment,.prolog,.doctype,.cdata,.punctuation,.operator,.entity,.url": {
+      "color": "gray"
+    },
+    ".comment": {
+      "fontStyle": "italic"
+    },
+    ".property,.tag,.boolean,.number,.constant,.symbol,.deleted,.function,.class-name,.regex,.important,.variable": {
+      "color": "purple"
+    },
+    ".atrule,.attr-value,.keyword": {
+      "color": "primary"
+    },
+    ".selector,.attr-name,.string,.char,.builtin,.inserted": {
+      "color": "secondary"
+    }
+  },
+  forms: {
+    label: {
       fontSize: 1,
+      fontWeight: 'bold',
     },
-    h6: {
-      color: 'text',
-      fontFamily: 'heading',
-      lineHeight: 'heading',
-      fontWeight: 'heading',
-      fontSize: 0,
-    },
-    p: {
-      color: 'text',
-      fontFamily: 'body',
-      fontWeight: 'body',
-      lineHeight: 'body',
-    },
-    a: {
-      color: 'primary',
-    },
-    pre: {
-      fontFamily: 'monospace',
-      overflowX: 'auto',
-      code: {
-        color: 'inherit',
+    input: {
+      borderColor: 'gray',
+      '&:focus': {
+        borderColor: 'primary',
+        boxShadow: (t: any) => `0 0 0 2px ${t.colors.primary}`,
+        outline: 'none',
       },
     },
-    code: {
-      fontFamily: 'monospace',
-      fontSize: 'inherit',
+    select: {
+      borderColor: 'gray',
+      '&:focus': {
+        borderColor: 'primary',
+        boxShadow: (t: any) => `0 0 0 2px ${t.colors.primary}`,
+        outline: 'none',
+      },
     },
-    table: {
-      width: '100%',
-      borderCollapse: 'separate',
-      borderSpacing: 0,
+    textarea: {
+      borderColor: 'gray',
+      '&:focus': {
+        borderColor: 'primary',
+        boxShadow: (t: any) => `0 0 0 2px ${t.colors.primary}`,
+        outline: 'none',
+      },
     },
-    th: {
-      textAlign: 'left',
-      borderBottomStyle: 'solid',
-    },
-    td: {
-      textAlign: 'left',
-      borderBottomStyle: 'solid',
-    },
-    img: {
-      maxWidth: '100%',
+    slider: {
+      bg: 'muted',
     },
   },
 }

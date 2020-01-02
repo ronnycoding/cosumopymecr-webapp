@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "rootDirs": ["./src"],
-    "jsx": "react"
+    "jsx": "react",
+    "skipLibCheck": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
 }
