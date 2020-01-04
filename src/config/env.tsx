@@ -4,7 +4,7 @@ const ENV = {
       identityPoolId: 'us-east-1:fcf5a9d3-b641-492b-b4b4-2eb62afb185b',
       region: 'us-east-1',
       userPoolId: 'us-east-1_iUCE4Womz',
-      userPoolWebClientId: '62ou2vl1k2p6tqo284sv7jbs2',
+      userPoolWebClientId: '2snvhgqortmn190gvr9p59g9cm',
     },
     Storage: {
       bucket: 'loyaltyadvertisingalicea',

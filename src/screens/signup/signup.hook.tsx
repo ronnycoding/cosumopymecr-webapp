@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 import useFormal from '@kevinwolf/formal'
+import { Auth } from 'aws-amplify'
 
 export default function useAuth() {
   const schema = yup.object().shape({
@@ -42,7 +43,23 @@ export default function useAuth() {
 
   const formal = useFormal(initialValues, {
     schema,
-    onSubmit: values => console.log("Your values are:", values)
+    onSubmit: (values) => {
+      const { firstName, lastName, authentication, password, authenticationMethod } = values
+      const { email, phoneNumber } = authenticationMethod
+
+      const username = authentication === 'email' ? email : `+506${phoneNumber}`
+      
+      Auth.signUp({
+          username,
+          password,
+          attributes: {
+            name: firstName,
+            family_name: lastName,
+          }
+        })
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
   })
 
   const handleSubmit = (e: any) => {
