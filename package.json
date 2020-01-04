@@ -12,6 +12,8 @@
     "@types/theme-ui__components": "^0.2.0",
     "aws-amplify": "^2.2.1",
     "aws-amplify-react": "^3.1.2",
+    "clsx": "^1.0.4",
+    "easy-peasy": "^3.2.6",
     "framer-motion": "^1.7.0",
     "lint-staged": "^9.5.0",
     "material-kit-react": "^1.8.0",

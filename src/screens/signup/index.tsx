@@ -17,15 +17,19 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 // @ts-ignore
 import ReactCodeInput from 'react-code-input'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 // @ts-ignore
 import PhoneInput from 'react-phone-input-2'
+
+import SnackBarNotification from 'components/snackbar-notification'
+import useCurrentUser from 'hooks/useCurrentUser'
+
 // import 'react-phone-input-2/lib/material.css'
 import 'react-phone-input-2/lib/style.css'
 import './signup.css'
 
-import useAuth from './signup.hook'
+import useSignUp from './signup.hook'
 
 function Copyright() {
   return (
@@ -64,7 +68,19 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles()
   // @ts-ignore
-  const { handleSignUp, formal, useConfirmationCode, setConfirmationCode } = useAuth()
+  const {
+    handleSignUp,
+    formal,
+    useConfirmationCode,
+    setConfirmationCode,
+    displayError,
+    handleCleanError,
+    displaySuccess,
+    handleAccountCreatedSuccessfully,
+    redirectToLogin,
+  } = useSignUp()
+
+  const { currentUser } = useCurrentUser()
 
   function handleOnChangePhoneNumber(value: string, data: any) {
     formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
@@ -75,10 +91,12 @@ export default function SignUp() {
   }
 
   // @ts-ignore
-  const phoneNumberError = formal.errors['authenticationMethod.email'] || '';
+  const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
 
   return (
     <Container component="main" maxWidth="xs">
+      {Object.keys(currentUser).length && (<Redirect to={'/welcome'} />)}
+      {redirectToLogin && (<Redirect to={'/login'} />)}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -235,6 +253,20 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
+      {displayError.message !== '' && (
+        <SnackBarNotification
+          variant='error'
+          message={displayError.message}
+          onCloseNotification={handleCleanError}
+        />
+      )}
+      {displaySuccess && (
+        <SnackBarNotification
+          variant='success'
+          message={'Account Created Successfully'}
+          onCloseNotification={handleAccountCreatedSuccessfully}
+        />
+      )}
       <Box mt={5}>
         <Copyright />
       </Box>

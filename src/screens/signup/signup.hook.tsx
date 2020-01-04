@@ -3,9 +3,16 @@ import { useState, useEffect } from 'react'
 import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
-export default function useAuth() {
+// import useCurrentUser from 'hooks/useCurrentUser'
+
+export default function useSignUp() {
   const [ useConfirmationCode, setUseConfirmationCode ] = useState(false)
   const [ confirmationCode, setConfirmationCode ] = useState('')
+  const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
+  const [ displaySuccess, setDisplaySuccess ] = useState(false)
+  const [ redirectToLogin, setRedirectToLogin ] = useState(false)
+  
+  // const { setCurrentUser } = useCurrentUser()
 
   const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
@@ -47,13 +54,14 @@ export default function useAuth() {
 
   const formal = useFormal(initialValues, {
     schema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const { firstName, lastName, authentication, password, authenticationMethod } = values
       const { email, phoneNumber } = authenticationMethod
 
       const username = authentication === 'email' ? email : `+506${phoneNumber}`
-      
-      Auth.signUp({
+
+      try {
+        await Auth.signUp({
           username,
           password,
           attributes: {
@@ -61,14 +69,43 @@ export default function useAuth() {
             family_name: lastName,
           }
         })
-        .then(() => setUseConfirmationCode(true))
-        .catch(err => console.log(err))
+        setUseConfirmationCode(true)
+      } catch ({ code, message }) {
+        setDisplayError({ code, message })
+        formal.reset()
+      }
     }
   })
 
-  const handleSignUp = (e: any) => {
+  // await Auth.resendSignUp(username).then(() => {
+  //   console.log('code resent successfully')
+  //   setUseConfirmationCode(true)
+  // })
+
+  function handleCleanError() {
+    const { code = '' } = displayError
+    if (code === 'UsernameExistsException') {
+      setRedirectToLogin(true)
+    }
+    setDisplayError({ code: '', message: '' })
+  }
+
+  function handleSetErrorConfirmationCode(code: string, message: string) {
+    setConfirmationCode('')
+    setDisplayError({ code, message })
+  }
+
+  function handleSignUp(e: any) {
     e.preventDefault()
     formal.submit()
+  }
+
+  function handleConfirmationCode() {
+    setDisplaySuccess(true)
+  }
+
+  function handleAccountCreatedSuccessfully() {
+    setRedirectToLogin(true)
   }
 
   useEffect(() => {
@@ -79,15 +116,20 @@ export default function useAuth() {
       Auth.confirmSignUp(username, confirmationCode, {
         // Optional. Force user confirmation irrespective of existing alias. By default set to True.
         forceAliasCreation: true    
-      }).then(data => console.log(data))
-      .catch(err => console.log(err))
+      }).then(handleConfirmationCode)
+      .catch(({ code, message }) => handleSetErrorConfirmationCode(code, message))
     }
   }, [confirmationCode])
 
   return {
     handleSignUp,
+    handleAccountCreatedSuccessfully,
     useConfirmationCode,
     setConfirmationCode,
     formal,
+    displayError,
+    handleCleanError,
+    displaySuccess,
+    redirectToLogin,
   }
 }
