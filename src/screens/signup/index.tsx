@@ -11,14 +11,19 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import { Link } from 'react-router-dom'
 
 // @ts-ignore
 import PhoneInput from 'react-phone-input-2'
 // import 'react-phone-input-2/lib/material.css'
 import 'react-phone-input-2/lib/style.css'
+import './signup.css'
 
-import useAuth from './singup.hook'
+import useAuth from './signup.hook'
 
 function Copyright() {
   return (
@@ -54,15 +59,21 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-// const options = ['Correo Electrónico', 'Número de Telefóno']
-
 export default function SignUp() {
   const classes = useStyles()
+  // @ts-ignore
   const { handleSubmit, formal } = useAuth()
 
   function handleOnChangePhoneNumber(value: string, data: any) {
-    formal.change("phoneNumber", value.replace(/[^0-9]+/g,'').slice(data.dialCode.length))
+    formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
   }
+
+  function handleOnChangeEmail(e: any) {
+    formal.change("authenticationMethod", { phoneNumber: '', email: e.target.value})
+  }
+
+  // @ts-ignore
+  const phoneNumberError = formal.errors['authenticationMethod.email'] || '';
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,8 +87,8 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              {/* <TextField
+            <Grid item xs={12} sm={6}>
+              <TextField
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -105,50 +116,68 @@ export default function SignUp() {
                 onChange={e => formal.change("lastName", e.target.value)}
                 error={Boolean(formal.errors.lastName)}
                 helperText={formal.errors.lastName && formal.errors.lastName}
-              /> */}
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={formal.values.email}
-                onChange={e => formal.change("email", e.target.value)}
-                error={Boolean(formal.errors.email)}
-                helperText={formal.errors.email && formal.errors.email}
               />
             </Grid>
             <Grid item xs={12}>
-              <PhoneInput
-                containerStyle={{
-                  display: 'flex',
-                  flexDirection: 'row'
-                }}
-                inputProps={{
-                  name: 'phoneNumber',
-                  required: true,
-                  autoFocus: false,
-                }}
-                // containerClass="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
-                inputClass="MuiInputBase-input MuiOutlinedInput-input"
-                country={'cr'}
-                onlyCountries={['cr', 'us']}
-                localization={{es: 'España'}}
-                inputStyle={{
-                  height: '1.1875em',
-                  width: '100%',
-                  animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
-                }}
-                countryCodeEditable={false}
-                value={formal.values.phoneNumber}
-                onChange={handleOnChangePhoneNumber}
-              />
-              {formal.errors.phoneNumber && formal.errors.phoneNumber}
+              <FormControl fullWidth>
+                <Select value={formal.values.authentication} onChange={e => formal.change("authentication", e.target.value)} displayEmpty fullWidth variant="outlined">
+                  <MenuItem value="" disabled>
+                    {'Choose an authentication method'}
+                  </MenuItem>
+                  <MenuItem value={'email'}>Email</MenuItem>
+                  <MenuItem value={'phoneNumber'}>Phone Number</MenuItem>
+                </Select>
+                {formal.errors.authentication && <FormHelperText error variant="outlined">{formal.errors.authentication}</FormHelperText>}
+              </FormControl>
             </Grid>
+            {formal.values.authentication && formal.values.authentication === 'email' && (
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={formal.values.authenticationMethod.email}
+                  onChange={handleOnChangeEmail}
+                  // @ts-ignore
+                  error={Boolean(formal.errors['authenticationMethod.email'])}
+                  // @ts-ignore
+                  helperText={formal.errors['authenticationMethod.email']}
+                />
+              </Grid>
+            )}
+            {formal.values.authentication && formal.values.authentication === 'phoneNumber' && (
+              <Grid item xs={12}>
+                <PhoneInput
+                  containerStyle={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                  }}
+                  inputProps={{
+                    name: 'phoneNumber',
+                    required: true,
+                    autoFocus: false,
+                  }}
+                  inputClass="MuiInputBase-input MuiOutlinedInput-input"
+                  country={'cr'}
+                  onlyCountries={['cr']}
+                  localization={{es: 'España'}}
+                  inputStyle={{
+                    height: '1.1875em',
+                    width: '100%',
+                    // animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
+                  }}
+                  countryCodeEditable={false}
+                  value={formal.values.authenticationMethod && formal.values.authenticationMethod.phoneNumber}
+                  onChange={handleOnChangePhoneNumber}
+                />
+                {/* @ts-ignore */}
+                {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
