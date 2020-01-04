@@ -5,7 +5,7 @@ import {
   Switch,
   Route,
 } from 'react-router-dom'
-import FacebookCallBack from 'screens/facebook'
+// import FacebookCallBack from 'screens/facebook'
 import configureAmplify from 'config/amplify'
 
 import WelcomeScreen from 'screens/welcome'
@@ -20,10 +20,7 @@ function App() {
     <div>
       <AppProvider>
         <Switch>
-          <Route path="/callback/facebook/:callBackResponse">
-            <FacebookCallBack />
-          </Route>
-          <Route path="/user/:userId">
+          <Route path="/home">
             <HomeScreen />
           </Route>
           <Route path="/login">

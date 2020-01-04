@@ -119,7 +119,7 @@ export default function useSignUp() {
       }).then(handleConfirmationCode)
       .catch(({ code, message }) => handleSetErrorConfirmationCode(code, message))
     }
-  }, [confirmationCode])
+  }, [confirmationCode, formal.values])
 
   return {
     handleSignUp,

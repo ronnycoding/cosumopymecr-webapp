@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui'
+
 import useCurrentUser from 'hooks/useCurrentUser'
 
 function Welcome() {

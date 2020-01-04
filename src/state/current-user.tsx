@@ -13,7 +13,7 @@ export default {
   resetStore: action((state: Object) => {
     return { ...state, initialState}
   }),
-  setCurrentUser: action((state: CurrentUser, payload: Object) => {
+  setCurrentUser: action((state: Object, payload: Object) => {
     return {
       ...state,
       currentUser: payload,

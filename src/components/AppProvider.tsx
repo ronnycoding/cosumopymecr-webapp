@@ -4,18 +4,21 @@ import theme from 'theme'
 import { BrowserRouter } from 'react-router-dom'
 import { StoreProvider } from 'easy-peasy'
 import { store } from 'state'
+// import { PersistGate } from 'redux-persist/integration/react'
 
 type AppProviderProps = {
   children: JSX.Element
 }
 export default function AppProvider({ children }: AppProviderProps) {
   return (
-    <StoreProvider store={store}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          {children}
-        </BrowserRouter>
-      </ThemeProvider>
-    </StoreProvider>
+    <BrowserRouter>
+      <StoreProvider store={store}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
+          <ThemeProvider theme={theme}>
+            {children}
+          </ThemeProvider>
+        {/* </PersistGate> */}
+      </StoreProvider>
+    </BrowserRouter>
   )
 }

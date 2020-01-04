@@ -94,10 +94,12 @@ export default function SignInSide() {
   // @ts-ignore
   const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
 
+  if (Object.keys(currentUser).length > 0) return <Redirect to={'/home'} />
+
+  if (redirectToSignUp) return <Redirect to={'/signUp'} />
+
   return (
     <Grid container component="main" className={classes.root}>
-      {Object.keys(currentUser).length > 0 && (<Redirect to={'/welcome'} />)}
-      {redirectToSignUp && (<Redirect to={'/signUp'} />)}
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -145,7 +147,7 @@ export default function SignInSide() {
               />
             )}
             {formal.values.authentication && formal.values.authentication === 'phoneNumber' && (
-              <Grid item xs={12}>
+              <div>
                 <PhoneInput
                   containerStyle={{
                     display: 'flex',
@@ -172,7 +174,7 @@ export default function SignInSide() {
                 />
                 {/* @ts-ignore */}
                 {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
-              </Grid>
+              </div>
             )}
             <TextField
               variant="outlined"

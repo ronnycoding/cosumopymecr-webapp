@@ -64,7 +64,6 @@ export default function useLogin() {
     schema,
     onSubmit: async (values) => {
       const formIsValid = await schema.isValid({...values})
-
       if (formIsValid) {
         setDisableSubmit(true)
         const { authentication, password, authenticationMethod } = values
@@ -73,7 +72,6 @@ export default function useLogin() {
 
         try {
             const user = await Auth.signIn(username, password)
-            console.log({...user})
             setCurrentUser({...user})
         } catch (err) {
             const { code, message } = err

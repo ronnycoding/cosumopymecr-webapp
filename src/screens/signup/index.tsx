@@ -93,10 +93,12 @@ export default function SignUp() {
   // @ts-ignore
   const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
 
+  if (Object.keys(currentUser).length) return <Redirect to={'/home'} />
+
+  if (redirectToLogin) return <Redirect to={'/login'} />
+
   return (
     <Container component="main" maxWidth="xs">
-      {Object.keys(currentUser).length && (<Redirect to={'/welcome'} />)}
-      {redirectToLogin && (<Redirect to={'/login'} />)}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
