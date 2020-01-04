@@ -15,6 +15,8 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
+// @ts-ignore
+import ReactCodeInput from 'react-code-input'
 import { Link } from 'react-router-dom'
 
 // @ts-ignore
@@ -62,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles()
   // @ts-ignore
-  const { handleSubmit, formal } = useAuth()
+  const { handleSignUp, formal, useConfirmationCode, setConfirmationCode } = useAuth()
 
   function handleOnChangePhoneNumber(value: string, data: any) {
     formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
@@ -85,7 +87,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           {'Registrate'}
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} noValidate onSubmit={handleSignUp}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -101,6 +103,7 @@ export default function SignUp() {
                 onChange={e => formal.change("firstName", e.target.value)}
                 error={Boolean(formal.errors.firstName)}
                 helperText={formal.errors.firstName && formal.errors.firstName}
+                disabled={useConfirmationCode}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -116,11 +119,19 @@ export default function SignUp() {
                 onChange={e => formal.change("lastName", e.target.value)}
                 error={Boolean(formal.errors.lastName)}
                 helperText={formal.errors.lastName && formal.errors.lastName}
+                disabled={useConfirmationCode}
               />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <Select value={formal.values.authentication} onChange={e => formal.change("authentication", e.target.value)} displayEmpty fullWidth variant="outlined">
+                <Select
+                  value={formal.values.authentication}
+                  onChange={e => formal.change("authentication", e.target.value)}
+                  displayEmpty
+                  fullWidth
+                  variant="outlined"
+                  disabled={useConfirmationCode}
+                >
                   <MenuItem value="" disabled>
                     {'Choose an authentication method'}
                   </MenuItem>
@@ -146,6 +157,7 @@ export default function SignUp() {
                   error={Boolean(formal.errors['authenticationMethod.email'])}
                   // @ts-ignore
                   helperText={formal.errors['authenticationMethod.email']}
+                  disabled={useConfirmationCode}
                 />
               </Grid>
             )}
@@ -173,6 +185,7 @@ export default function SignUp() {
                   countryCodeEditable={false}
                   value={formal.values.authenticationMethod && formal.values.authenticationMethod.phoneNumber}
                   onChange={handleOnChangePhoneNumber}
+                  disabled={useConfirmationCode}
                 />
                 {/* @ts-ignore */}
                 {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
@@ -191,18 +204,28 @@ export default function SignUp() {
                 onChange={e => formal.change("password", e.target.value)}
                 error={Boolean(formal.errors.password)}
                 helperText={formal.errors.password && formal.errors.password}
+                disabled={useConfirmationCode}
               />
             </Grid>
+            {useConfirmationCode && (
+              <Grid item xs={12}>
+                <ReactCodeInput type='number' fields={6} onChange={setConfirmationCode} />
+                <FormHelperText variant="outlined">{'Enter your confirmation code'}</FormHelperText>
+              </Grid>
+            )}
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
+          {!useConfirmationCode && (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              disabled={useConfirmationCode}
+            >
+              Sign Up
+            </Button>
+          )}
           <Grid container justify="flex-end">
             <Grid item>
               <Link to="/login">

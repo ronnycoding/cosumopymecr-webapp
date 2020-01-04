@@ -1,8 +1,12 @@
 import * as yup from 'yup'
+import { useState, useEffect } from 'react'
 import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
 export default function useAuth() {
+  const [ useConfirmationCode, setUseConfirmationCode ] = useState(false)
+  const [ confirmationCode, setConfirmationCode ] = useState('')
+
   const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
     lastName: yup.string().required('Last Name is required'),
@@ -57,18 +61,33 @@ export default function useAuth() {
             family_name: lastName,
           }
         })
-        .then(data => console.log(data))
+        .then(() => setUseConfirmationCode(true))
         .catch(err => console.log(err))
     }
   })
 
-  const handleSubmit = (e: any) => {
+  const handleSignUp = (e: any) => {
     e.preventDefault()
     formal.submit()
   }
 
+  useEffect(() => {
+    if (confirmationCode.length === 6) {
+      const { authentication, authenticationMethod } = formal.values
+      const { email, phoneNumber } = authenticationMethod
+      const username = authentication === 'email' ? email : `+506${phoneNumber}`
+      Auth.confirmSignUp(username, confirmationCode, {
+        // Optional. Force user confirmation irrespective of existing alias. By default set to True.
+        forceAliasCreation: true    
+      }).then(data => console.log(data))
+      .catch(err => console.log(err))
+    }
+  }, [confirmationCode])
+
   return {
-    handleSubmit,
-    formal
+    handleSignUp,
+    useConfirmationCode,
+    setConfirmationCode,
+    formal,
   }
 }

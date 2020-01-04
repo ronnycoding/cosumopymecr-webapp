@@ -10612,6 +10612,15 @@ react-app-polyfill@^1.0.2, react-app-polyfill@^1.0.5:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
+react-code-input@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/react-code-input/-/react-code-input-3.8.1.tgz#8700cb809d4768d76ca50e7d990d0e548f0e6ee3"
+  integrity sha512-pFrPqcRoJj/Aao2PFrnH9lKquSp52K7QIc+6Pft8xloEidjOvhWB4RjmJvoBmkkkiBHEuicHxu+zyFbFKt27uQ==
+  dependencies:
+    classnames "^2.2.5"
+    react "^16.3.2"
+    react-dom "^16.3.2"
+
 react-datetime@2.16.3:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-2.16.3.tgz#7f9ac7d4014a939c11c761d0c22d1fb506cb505e"
@@ -10693,7 +10702,7 @@ react-dom@16.9.0:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
-react-dom@^16.12.0:
+react-dom@^16.12.0, react-dom@^16.3.2:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.12.0.tgz#0da4b714b8d13c2038c9396b54a92baea633fe11"
   integrity sha512-LMxFfAGrcS3kETtQaCkTKjMiifahaMySFDn71fZUNpPHZQEzmk/GiAeIT8JSOrHB23fnuCOMruL2a8NYlw+8Gw==
@@ -10990,7 +10999,7 @@ react@16.9.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-react@^16.12.0:
+react@^16.12.0, react@^16.3.2:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
   integrity sha512-fglqy3k5E+81pA8s+7K0/T3DBCF0ZDOher1elBFzF7O6arXJgzyu/FW+COxFvAWXJoJN9KIZbT2LXlukwphYTA==

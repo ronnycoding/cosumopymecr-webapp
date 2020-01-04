@@ -10,3 +10,8 @@
 div#authenticationMethod {
   opacity: 0.5;
 }
+
+.react-code-input {
+  display: flex !important;
+  justify-content: space-around;
+}
