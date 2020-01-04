@@ -1,3 +1,5 @@
+import { action } from 'easy-peasy'
+
 interface CurrentUser {
   currentUser?: Object
 }
@@ -8,16 +10,16 @@ const initialState = {
 
 export default {
   ...initialState,
-  resetStore(state: Object) {
+  resetStore: action((state: Object) => {
     return { ...state, initialState}
-  },
-  setCurrentUser(state: CurrentUser, payload: Object) {
+  }),
+  setCurrentUser: action((state: CurrentUser, payload: Object) => {
     return {
       ...state,
       currentUser: payload,
     }
-  },
-  updateCurrentUser(state: CurrentUser, payload: Object) {
+  }),
+  updateCurrentUser: action((state: CurrentUser, payload: Object) => {
     return {
       ...state,
       currentUser: {
@@ -25,5 +27,5 @@ export default {
         ...payload
       }
     }
-  }
+  })
 }

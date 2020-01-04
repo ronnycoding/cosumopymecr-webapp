@@ -4,6 +4,7 @@ import useCurrentUser from 'hooks/useCurrentUser'
 
 function Welcome() {
   const { currentUser } = useCurrentUser()
+
   return (
     <div>
       <h1
