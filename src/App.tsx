@@ -8,7 +8,8 @@ import {
 // import FacebookCallBack from 'screens/facebook'
 import configureAmplify from 'config/amplify'
 
-import WelcomeScreen from 'screens/welcome'
+// import WelcomeScreen from 'screens/welcome'
+import ForgotPasswordScreen from 'screens/forgot-password'
 import HomeScreen from 'screens/home'
 import LoginScreen from 'screens/login'
 import SignUpScreen from 'screens/signup'
@@ -20,6 +21,9 @@ function App() {
     <div>
       <AppProvider>
         <Switch>
+          <Route path="/forgot-password">
+            <ForgotPasswordScreen />
+          </Route>
           <Route path="/home">
             <HomeScreen />
           </Route>
@@ -29,9 +33,9 @@ function App() {
           <Route path="/signup">
             <SignUpScreen />
           </Route>
-          <Route path="/">
+          {/* <Route path="/">
             <WelcomeScreen />
-          </Route>
+          </Route> */}
         </Switch>
       </AppProvider>
     </div>

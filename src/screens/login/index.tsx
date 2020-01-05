@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
 // import * as MaterialLink from '@material-ui/core/Link'
 import { Link, Redirect } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
@@ -111,89 +109,93 @@ export default function SignInSide() {
             Sign in
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleLogin}>
-            <FormControl fullWidth>
-              <Select
-                value={formal.values.authentication}
-                onChange={e => formal.change("authentication", e.target.value)}
-                displayEmpty
-                fullWidth
-                variant="outlined"
-                // disabled={useConfirmationCode}
-              >
-                <MenuItem value="" disabled>
-                  {'Choose an authentication method'}
-                </MenuItem>
-                <MenuItem value={'email'}>Email</MenuItem>
-                <MenuItem value={'phoneNumber'}>Phone Number</MenuItem>
-              </Select>
-              {formal.errors.authentication && <FormHelperText error variant="outlined">{formal.errors.authentication}</FormHelperText>}
-            </FormControl>
-            {formal.values.authentication && formal.values.authentication === 'email' && (
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={formal.values.authenticationMethod.email}
-                onChange={handleOnChangeEmail}
-                // @ts-ignore
-                error={Boolean(formal.errors['authenticationMethod.email'])}
-                // @ts-ignore
-                helperText={formal.errors['authenticationMethod.email']}
-                // disabled={useConfirmationCode}
-              />
-            )}
-            {formal.values.authentication && formal.values.authentication === 'phoneNumber' && (
-              <div>
-                <PhoneInput
-                  containerStyle={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                  }}
-                  inputProps={{
-                    name: 'phoneNumber',
-                    required: true,
-                    autoFocus: false,
-                  }}
-                  inputClass="MuiInputBase-input MuiOutlinedInput-input"
-                  country={'cr'}
-                  onlyCountries={['cr']}
-                  localization={{es: 'España'}}
-                  inputStyle={{
-                    height: '1.1875em',
-                    width: '100%',
-                    // animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
-                  }}
-                  countryCodeEditable={false}
-                  value={formal.values.authenticationMethod && formal.values.authenticationMethod.phoneNumber}
-                  onChange={handleOnChangePhoneNumber}
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <Select
+                    value={formal.values.authentication}
+                    onChange={e => formal.change("authentication", e.target.value)}
+                    displayEmpty
+                    fullWidth
+                    variant="outlined"
+                    // disabled={useConfirmationCode}
+                  >
+                    <MenuItem value="" disabled>
+                      {'Choose an authentication method'}
+                    </MenuItem>
+                    <MenuItem value={'email'}>Email</MenuItem>
+                    <MenuItem value={'phoneNumber'}>Phone Number</MenuItem>
+                  </Select>
+                  {formal.errors.authentication && <FormHelperText error variant="outlined">{formal.errors.authentication}</FormHelperText>}
+                </FormControl>
+              </Grid>
+              {formal.values.authentication && formal.values.authentication === 'email' && (
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    value={formal.values.authenticationMethod.email}
+                    onChange={handleOnChangeEmail}
+                    // @ts-ignore
+                    error={Boolean(formal.errors['authenticationMethod.email'])}
+                    // @ts-ignore
+                    helperText={formal.errors['authenticationMethod.email']}
+                    // disabled={useConfirmationCode}
+                  />
+                </Grid>
+              )}
+              {formal.values.authentication && formal.values.authentication === 'phoneNumber' && (
+                <Grid item xs={12}>
+                  <PhoneInput
+                    containerStyle={{
+                      display: 'flex',
+                      flexDirection: 'row'
+                    }}
+                    inputProps={{
+                      name: 'phoneNumber',
+                      required: true,
+                      autoFocus: false,
+                    }}
+                    inputClass="MuiInputBase-input MuiOutlinedInput-input"
+                    country={'cr'}
+                    onlyCountries={['cr']}
+                    localization={{es: 'España'}}
+                    inputStyle={{
+                      height: '1.1875em',
+                      width: '100%',
+                      // animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
+                    }}
+                    countryCodeEditable={false}
+                    value={formal.values.authenticationMethod && formal.values.authenticationMethod.phoneNumber}
+                    onChange={handleOnChangePhoneNumber}
+                    // disabled={useConfirmationCode}
+                  />
+                  {/* @ts-ignore */}
+                  {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={e => formal.change("password", e.target.value)}
+                  error={Boolean(formal.errors.password)}
+                  helperText={formal.errors.password && formal.errors.password}
                   // disabled={useConfirmationCode}
                 />
-                {/* @ts-ignore */}
-                {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
-              </div>
-            )}
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={e => formal.change("password", e.target.value)}
-              error={Boolean(formal.errors.password)}
-              helperText={formal.errors.password && formal.errors.password}
-              // disabled={useConfirmationCode}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+              </Grid>
+            </Grid>
             <Button
               type="submit"
               fullWidth
@@ -206,7 +208,7 @@ export default function SignInSide() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/">
+                <Link to="/forgot-password">
                   Forgot password?
                 </Link>
               </Grid>
