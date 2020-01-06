@@ -6,7 +6,7 @@ import useHome from './home.hook'
 import useCurrentUser from 'hooks/useCurrentUser'
 
 function HomeScreen() {
-  const { isLoading, userId } = useHome()
+  const { isLoading, userId, homeData } = useHome()
   const { currentUser } = useCurrentUser()
 
   if (Object.keys(currentUser).length === 0) return <Redirect to={'/login'} />
@@ -20,6 +20,9 @@ function HomeScreen() {
         }}>
         HomeScreen {isLoading ? 'loading' : 'loaded'}, userId {userId}
       </h1>
+      <pre>
+        {JSON.stringify(homeData, null, 2)}
+      </pre>
       <pre>
         {JSON.stringify(currentUser, null, 2)}
       </pre>
