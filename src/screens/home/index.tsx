@@ -2,11 +2,11 @@
 import { jsx } from 'theme-ui'
 import { Redirect } from 'react-router-dom'
 
-import useHome from './home.hook'
+// import useHome from './home.hook'
 import useCurrentUser from 'hooks/useCurrentUser'
 
 function HomeScreen() {
-  const { isLoading, userId, homeData } = useHome()
+  // const { isLoading, userId, homeData } = useHome()
   const { currentUser } = useCurrentUser()
 
   if (Object.keys(currentUser).length === 0) return <Redirect to={'/login'} />
@@ -18,11 +18,8 @@ function HomeScreen() {
           color: 'text',
           fontFamily: 'heading',
         }}>
-        HomeScreen {isLoading ? 'loading' : 'loaded'}, userId {userId}
+        HomeScreen
       </h1>
-      <pre>
-        {JSON.stringify(homeData, null, 2)}
-      </pre>
       <pre>
         {JSON.stringify(currentUser, null, 2)}
       </pre>

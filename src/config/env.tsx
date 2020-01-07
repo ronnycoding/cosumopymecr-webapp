@@ -1,19 +1,13 @@
 const ENV = {
   development: {
     Auth: {
-      identityPoolId: 'us-east-1:fcf5a9d3-b641-492b-b4b4-2eb62afb185b',
+      identityPoolId: 'us-east-1:0fa90009-c115-4ea7-afa9-748eadc66c44',
       region: 'us-east-1',
-      userPoolId: 'us-east-1_iUCE4Womz',
-      userPoolWebClientId: '2snvhgqortmn190gvr9p59g9cm',
+      userPoolId: 'us-east-1_LQvZhtgL8',
+      userPoolWebClientId: '1agnhgp7g3g0n6m8k70i1c625g',
     },
     Storage: {
       bucket: 'loyaltyadvertisingalicea',
-    },
-    API: {
-      graphql_headers: async () => ({
-        'x-hasura-admin-secret': 'Lg8HcwtexBKwAgU4Aq'
-      }),
-      graphql_endpoint: 'http://35.175.200.211:8080/v1/graphql',
     },
     // AppSync: {
     //   Default: {
@@ -30,9 +24,9 @@ const ENV = {
     //       authorizationType: 'AMAZON_COGNITO_USER_POOLS',
     //   }
     // }
-    // aws_appsync_graphqlEndpoint: 'http://35.175.200.211:8080/v1/graphql',
-    // aws_appsync_region: 'us-east-1',
-    // aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
+    aws_appsync_graphqlEndpoint: 'https://2x6qy7awjjcbdlonpuhdsffen4.appsync-api.us-east-1.amazonaws.com/graphql',
+    aws_appsync_region: 'us-east-1',
+    aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
   },
   staging: {
     Auth: {
