@@ -2,7 +2,8 @@ import React, {
   createContext,
   useReducer,
   useMemo,
-  useContext
+  useContext,
+  useEffect,
 } from 'react'
 
 interface IState {
@@ -51,17 +52,26 @@ function useUser() {
   }
   // @ts-ignore
   const [state, dispatch] = context
-
   const setUser = (user: object) => dispatch({ type: 'SET_USER', payload: {...user} })
+  const resetUser = () => dispatch({ type: 'RESET' })
   const { user = {} } = state
   return {
     user,
     setUser,
+    resetUser,
   }
 }
 
 function UserProvider(props: any) {
-  const [state, dispatch] = useReducer(userReducer, { user: {} })
+  // @ts-ignore
+  const localState = JSON.parse(window.localStorage.getItem('session_user'))
+  const [state, dispatch] = useReducer(userReducer, localState || { user: {} })
+
+  useEffect(() => {
+    // @ts-ignore
+    window.localStorage.setItem('session_user', JSON.stringify(state))
+  }, [state])
+
   const user = useMemo(() => [state, dispatch], [state])
   return <UserContext.Provider value={user} {...props} />
 }

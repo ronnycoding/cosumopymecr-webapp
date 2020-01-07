@@ -71,10 +71,9 @@ export default function useLogin() {
         const username = authentication === 'email' ? email : `+506${phoneNumber}`
 
         try {
-            console.log(username, password)
             const user = await Auth.signIn(username, password)
-            console.log(user)
-            setUser({...user})
+            const { attributes } = user
+            setUser({...attributes})
         } catch (err) {
             const { code, message } = err
             setDisplayError({ code, message })
