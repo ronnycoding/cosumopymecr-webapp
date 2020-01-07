@@ -1,18 +1,15 @@
-import { createStore } from 'easy-peasy'
+import React from 'react'
 
-import currentUser from './current-user'
+import { UserProvider } from './user'
 
-const store = createStore({
-  currentUser,
-})
-
-function resetStores() {
-  Object.values(store.dispatch).forEach(
-    (storeAction: any) => storeAction.resetStore && storeAction.resetStore(),
-  )
+type StateProviderProps = {
+  children: JSX.Element
 }
 
-export {
-  store,
-  resetStores
+export default function StateProvider({ children }: StateProviderProps) {
+  return (
+    <UserProvider>
+      {children}
+    </UserProvider>
+  )
 }

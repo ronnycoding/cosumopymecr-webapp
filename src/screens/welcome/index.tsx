@@ -1,24 +1,25 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui'
-import { useEffect } from 'react'
-import useCurrentUser from 'hooks/useCurrentUser'
-import { API, graphqlOperation } from 'aws-amplify'
+import React from 'react'
+// import { API, graphqlOperation } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 
-import { getWelcomeDataQuery } from './welcome.graphql'
+import { useUser } from 'state/user'
+
+// import { getWelcomeDataQuery } from './welcome.graphql'
 
 function Welcome() {
-  const { currentUser } = useCurrentUser()
+  const {
+    user,
+  } = useUser()
 
-  useEffect(() => {
-    async function getWelcomeData() {
-      // @ts-ignore
-      const welcomeData = await API.graphql({...graphqlOperation(getWelcomeDataQuery), authMode: 'AMAZON_COGNITO_USER_POOLS'})
-      console.log(welcomeData)
-    }
+  // useEffect(() => {
+  //   async function getWelcomeData() {
+  //     // @ts-ignore
+  //     const welcomeData = await API.graphql({...graphqlOperation(getWelcomeDataQuery), authMode: 'AMAZON_COGNITO_USER_POOLS'})
+  //     console.log(welcomeData)
+  //   }
 
-    getWelcomeData()
-  }, [])
+  //   getWelcomeData()
+  // }, [])
 
   return (
     <div>
@@ -33,7 +34,7 @@ function Welcome() {
         Login
       </Link>{' '}
       <pre>
-        {JSON.stringify(currentUser, null, 2)}
+        {JSON.stringify(user, null, 2)}
       </pre>
     </div>
   )

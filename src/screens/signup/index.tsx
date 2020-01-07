@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui'
+import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -23,7 +22,7 @@ import { Link, Redirect } from 'react-router-dom'
 import PhoneInput from 'react-phone-input-2'
 
 import SnackBarNotification from 'components/snackbar-notification'
-import useCurrentUser from 'hooks/useCurrentUser'
+import { useUser } from 'state/user'
 
 // import 'react-phone-input-2/lib/material.css'
 import 'react-phone-input-2/lib/style.css'
@@ -80,7 +79,9 @@ export default function SignUp() {
     redirectToLogin,
   } = useSignUp()
 
-  const { currentUser } = useCurrentUser()
+  const {
+    user,
+  } = useUser()
 
   function handleOnChangePhoneNumber(value: string, data: any) {
     formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
@@ -93,7 +94,7 @@ export default function SignUp() {
   // @ts-ignore
   const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
 
-  if (Object.keys(currentUser).length) return <Redirect to={'/home'} />
+  if (Object.keys(user).length) return <Redirect to={'/home'} />
 
   if (redirectToLogin) return <Redirect to={'/login'} />
 

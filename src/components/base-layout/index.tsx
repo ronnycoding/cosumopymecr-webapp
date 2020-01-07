@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui'
+import React from 'react'
 import { Grid, Box } from '@theme-ui/components'
 
 type BaseLayoutProps = {

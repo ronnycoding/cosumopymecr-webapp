@@ -17,7 +17,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 
 import SnackBarNotification from 'components/snackbar-notification'
-import useCurrentUser from 'hooks/useCurrentUser'
+import { useUser } from 'state/user'
 
 // @ts-ignore
 import PhoneInput from 'react-phone-input-2'
@@ -79,7 +79,9 @@ export default function SignInSide() {
     disableSubmit,
   } = useLogin()
 
-  const { currentUser } = useCurrentUser()
+  const {
+    user,
+  } = useUser()
 
   function handleOnChangePhoneNumber(value: string, data: any) {
     formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
@@ -92,7 +94,7 @@ export default function SignInSide() {
   // @ts-ignore
   const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
 
-  if (Object.keys(currentUser).length > 0) return <Redirect to={'/home'} />
+  if (Object.keys(user).length > 0) return <Redirect to={'/home'} />
 
   if (redirectToSignUp) return <Redirect to={'/signUp'} />
 

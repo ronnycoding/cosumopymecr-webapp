@@ -3,12 +3,12 @@ import * as yup from 'yup'
 import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
-import useCurrentUser from 'hooks/useCurrentUser'
+import { useUser } from 'state/user'
 
 export default function useLogin() {
   const {
-    setCurrentUser,
-  } = useCurrentUser()
+    setUser,
+  } = useUser()
   const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
   const [ redirectToSignUp, setRedirectToSignUp ] = useState(false)
   const [ disableSubmit, setDisableSubmit ] = useState(false)
@@ -71,8 +71,10 @@ export default function useLogin() {
         const username = authentication === 'email' ? email : `+506${phoneNumber}`
 
         try {
+            console.log(username, password)
             const user = await Auth.signIn(username, password)
-            setCurrentUser({...user})
+            console.log(user)
+            setUser({...user})
         } catch (err) {
             const { code, message } = err
             setDisplayError({ code, message })

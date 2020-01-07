@@ -4,8 +4,6 @@ import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
 export default function useConfirmationCode() {
-  // const {
-  // } = useCurrentUser()
   const [ displayErrorConfirmationCode, setDisplayErrorConfirmationCode ] =  useState({ code: '', message: '' })
   const [ redirectToLogin, setRedirectToLogin ] = useState(false)
   const [ disableConfirmationCodeSubmit, setDisableConfirmationCodeSubmit ] = useState(false)

@@ -1,15 +1,16 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui'
+import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 // import useHome from './home.hook'
-import useCurrentUser from 'hooks/useCurrentUser'
+import { useUser } from 'state/user'
 
 function HomeScreen() {
   // const { isLoading, userId, homeData } = useHome()
-  const { currentUser } = useCurrentUser()
+  const {
+    user,
+  } = useUser()
 
-  if (Object.keys(currentUser).length === 0) return <Redirect to={'/login'} />
+  if (Object.keys(user).length === 0) return <Redirect to={'/login'} />
 
   return (
     <div>
@@ -21,7 +22,7 @@ function HomeScreen() {
         HomeScreen
       </h1>
       <pre>
-        {JSON.stringify(currentUser, null, 2)}
+        {JSON.stringify(user, null, 2)}
       </pre>
     </div>
   )

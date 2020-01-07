@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui'
-import AppProvider from 'components/AppProvider'
+import React from 'react'
+import AppProvider from 'provider'
 import {
   Switch,
   Route,

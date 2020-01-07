@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
-// import useCurrentUser from 'hooks/useCurrentUser'
 
 export default function useSignUp() {
   const [ useConfirmationCode, setUseConfirmationCode ] = useState(false)
@@ -11,8 +10,6 @@ export default function useSignUp() {
   const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
   const [ displaySuccess, setDisplaySuccess ] = useState(false)
   const [ redirectToLogin, setRedirectToLogin ] = useState(false)
-  
-  // const { setCurrentUser } = useCurrentUser()
 
   const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
