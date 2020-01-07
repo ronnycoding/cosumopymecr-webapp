@@ -9,21 +9,6 @@ const ENV = {
     Storage: {
       bucket: 'loyaltyadvertisingalicea',
     },
-    // AppSync: {
-    //   Default: {
-    //       ApiUrl: 'http://35.175.200.211:8080/v1/graphql',
-    //       Region: 'us-east-1',
-    //       AuthMode: 'AMAZON_COGNITO_USER_POOLS',
-    //   }
-    // },
-    // awsAPIPlugin: {
-    //   apiBackend: {
-    //       endpointType: 'GraphQL',
-    //       endpoint: 'http://35.175.200.211:8080/v1/graphql',
-    //       region: 'us-east-1',
-    //       authorizationType: 'AMAZON_COGNITO_USER_POOLS',
-    //   }
-    // }
     aws_appsync_graphqlEndpoint: 'https://2x6qy7awjjcbdlonpuhdsffen4.appsync-api.us-east-1.amazonaws.com/graphql',
     aws_appsync_region: 'us-east-1',
     aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
@@ -38,15 +23,9 @@ const ENV = {
     Storage: {
       bucket: '',
     },
-    API: {
-      graphql_headers: async () => ({
-        'x-hasura-admin-secret': 'Lg8HcwtexBKwAgU4Aq'
-      }),
-      // graphql_endpoint: 'http://35.175.200.211:8080/v1/graphql',
-    },
-    // aws_appsync_graphqlEndpoint: '',
-    // aws_appsync_region: '',
-    // aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    aws_appsync_graphqlEndpoint: '',
+    aws_appsync_region: '',
+    aws_appsync_authenticationType: '', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
   },
   production: {
     Auth: {
@@ -58,15 +37,9 @@ const ENV = {
     Storage: {
       bucket: '',
     },
-    API: {
-      graphql_headers: async () => ({
-        'x-hasura-admin-secret': 'Lg8HcwtexBKwAgU4Aq'
-      }),
-      // graphql_endpoint: 'http://35.175.200.211:8080/v1/graphql',
-    },
-    // aws_appsync_graphqlEndpoint: '',
-    // aws_appsync_region: '',
-    // aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    aws_appsync_graphqlEndpoint: '',
+    aws_appsync_region: '',
+    aws_appsync_authenticationType: '', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
   }
 }
 
