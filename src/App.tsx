@@ -3,6 +3,7 @@ import AppProvider from 'provider'
 import {
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom'
 // import FacebookCallBack from 'screens/facebook'
 import configureAmplify from 'config/amplify'
@@ -20,23 +21,23 @@ function App() {
     <div>
       <AppProvider>
         <Switch>
-          <Route path="/forgot-password">
+          <Route exact path="/forgot-password">
             <ForgotPasswordScreen />
           </Route>
-          <Route path="/home">
+          <Route exact path="/home">
             <HomeScreen />
           </Route>
-          <Route path="/login">
+          <Route exact path="/login">
             <LoginScreen />
           </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
             <SignUpScreen />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <WelcomeScreen />
           </Route>
           <Route path="*">
-            <LoginScreen />
+            <Redirect to="/" />
           </Route>
         </Switch>
       </AppProvider>

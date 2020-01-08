@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
+import GlobalThemeOverride from 'theme'
 import StateProvider from 'state'
 
 type AppProviderProps = {
@@ -10,9 +11,11 @@ type AppProviderProps = {
 export default function AppProvider({ children }: AppProviderProps) {
   return (
     <StateProvider>
-      <BrowserRouter>
-        {children}
-      </BrowserRouter>
+      <GlobalThemeOverride>
+        <BrowserRouter>
+          {children}
+        </BrowserRouter>
+      </GlobalThemeOverride>
     </StateProvider>
   )
 }
