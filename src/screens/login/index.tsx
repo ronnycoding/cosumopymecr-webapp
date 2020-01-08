@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField'
 // import * as MaterialLink from '@material-ui/core/Link'
 import { Link, Redirect } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
@@ -17,25 +16,13 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 
 import SnackBarNotification from 'components/snackbar-notification'
+import Copyright from 'components/copyright'
 import { useUser } from 'state/user'
 
 // @ts-ignore
 import PhoneInput from 'react-phone-input-2'
 
 import useLogin from './login.hook'
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link to="/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -227,9 +214,7 @@ export default function SignInSide() {
                 onCloseNotification={handleCleanError}
               />
             )}
-            <Box mt={5}>
-              <Copyright />
-            </Box>
+            <Copyright />
           </form>
         </div>
       </Grid>

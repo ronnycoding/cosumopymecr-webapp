@@ -1,42 +1,36 @@
-import React from 'react'
-// import { API, graphqlOperation } from 'aws-amplify'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Container from '@material-ui/core/Container'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Grid from '@material-ui/core/Grid'
 
-import { useUser } from 'state/user'
-
-// import { getWelcomeDataQuery } from './welcome.graphql'
+import ProfileCard from 'components/profile-card'
+import useFackeData from 'fake'
 
 function Welcome() {
   const {
-    user,
-  } = useUser()
+    getDataUsers,
+  } = useFackeData()
 
-  // useEffect(() => {
-  //   async function getWelcomeData() {
-  //     // @ts-ignore
-  //     const welcomeData = await API.graphql({...graphqlOperation(getWelcomeDataQuery), authMode: 'AMAZON_COGNITO_USER_POOLS'})
-  //     console.log(welcomeData)
-  //   }
+  const [dataUsers, setDataUsers] = useState([])
 
-  //   getWelcomeData()
-  // }, [])
+  useEffect(() => {
+    getDataUsers(500)
+      .then(({results}: any) => setDataUsers(results))
+  }, [])
 
   return (
-    <div>
-      <h1
-        sx={{
-          color: 'text',
-          fontFamily: 'heading',
-        }}>
-        welcome
-      </h1>
+    <Container>
+      <CssBaseline />
       <Link to="/login">
-        Login
-      </Link>{' '}
-      <pre>
-        {JSON.stringify(user, null, 2)}
-      </pre>
-    </div>
+        Already have an account? Sign in
+      </Link>
+      <Grid item xs={12}>
+        <Grid container justify="center" spacing={2}>
+          {dataUsers.map(({picture, login}: any) => <ProfileCard key={login.uuid} image={picture.large} />)}
+        </Grid>
+      </Grid>
+    </Container>
   )
 }
 
