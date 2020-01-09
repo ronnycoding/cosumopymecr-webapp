@@ -170,22 +170,26 @@ export default function TopBar({ isLogged, handleLogout }: TopBarProps) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
+      {isLogged && (
+        <Fragment>
+          <MenuItem>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <MailIcon />
+              </Badge>
+            </IconButton>
+            <p>Messages</p>
+          </MenuItem>
+          <MenuItem>
+            <IconButton aria-label="show 11 new notifications" color="inherit">
+              <Badge badgeContent={11} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <p>Notifications</p>
+          </MenuItem>
+        </Fragment>
+      )}
       <MenuItem component={ Link } to='/login'>
         <IconButton
           aria-label="account of current user"
@@ -197,17 +201,19 @@ export default function TopBar({ isLogged, handleLogout }: TopBarProps) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
-      <MenuItem onClick={handleOnLogout}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <ExitToApp />
-        </IconButton>
-        <p>Logout</p>
-      </MenuItem>
+      {isLogged && (
+        <MenuItem onClick={handleOnLogout}>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <ExitToApp />
+          </IconButton>
+          <p>Logout</p>
+        </MenuItem>
+      )}
     </Menu>
   )
 
@@ -279,12 +285,8 @@ export default function TopBar({ isLogged, handleLogout }: TopBarProps) {
           )}
         </Toolbar>
       </AppBar>
-      {isLogged && (
-        <Fragment>
-          {renderMobileMenu}
-          {renderMenu}
-        </Fragment>
-      )}
+      {renderMobileMenu}
+      {renderMenu}
     </div>
   )
 }
