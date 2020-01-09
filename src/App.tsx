@@ -10,7 +10,6 @@ import configureAmplify from 'config/amplify'
 
 import WelcomeScreen from 'screens/welcome'
 import ForgotPasswordScreen from 'screens/forgot-password'
-import HomeScreen from 'screens/home'
 import LoginScreen from 'screens/login'
 import SignUpScreen from 'screens/signup'
 
@@ -23,9 +22,6 @@ function App() {
         <Switch>
           <Route exact path="/forgot-password">
             <ForgotPasswordScreen />
-          </Route>
-          <Route exact path="/home">
-            <HomeScreen />
           </Route>
           <Route exact path="/login">
             <LoginScreen />

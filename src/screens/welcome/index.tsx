@@ -1,47 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
 
 import ProfileCard from 'components/profile-card'
+import TopBar from 'components/topbar'
+import { useUser } from 'state/user'
 import useFackeData from 'fake'
 
-function Welcome() {
+export default function Welcome() {
   const {
     getDataUsers,
   } = useFackeData()
 
+  const {
+    user,
+    resetUser: handleLogout,
+  } = useUser()
+
   const [dataUsers, setDataUsers] = useState([])
 
   useEffect(() => {
-    getDataUsers(96)
+    getDataUsers(18)
       .then(({results}: any) => setDataUsers(results))
   }, [])
 
   return (
     <Container>
       <CssBaseline />
-      <AppBar position='static' color='default'>
-        <Toolbar>
-          <Button component={ Link } to="/login" variant="outlined" color="secondary">
-            Login
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <TopBar isLogged={Boolean(Object.keys(user).length)} handleLogout={handleLogout} />
       <Box mt={2}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={1}>
-            {dataUsers.map(({picture, login}: any) => <ProfileCard key={login.uuid} image={picture.large} />)}
+            {dataUsers.map(({ login }: any) => <ProfileCard key={login.uuid} image={'https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg'} />)}
           </Grid>
         </Grid>
       </Box>
     </Container>
   )
 }
-
-export default Welcome
