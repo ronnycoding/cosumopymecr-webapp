@@ -5,6 +5,8 @@ import React, {
   useContext,
   useEffect,
 } from 'react'
+import { Cache } from 'aws-amplify'
+import moment from 'moment'
 
 interface IState {
   user: {}
@@ -63,13 +65,13 @@ function useUser() {
 }
 
 function UserProvider(props: any) {
-  // @ts-ignore
-  const localState = JSON.parse(window.localStorage.getItem('session_user'))
+  const localState = Cache.getItem('user')
   const [state, dispatch] = useReducer(userReducer, localState || { user: {} })
 
   useEffect(() => {
-    // @ts-ignore
-    window.localStorage.setItem('session_user', JSON.stringify(state))
+    Cache.setItem('user', state, {
+      expires: moment().add(5, 'm').valueOf()
+    })
   }, [state])
 
   const user = useMemo(() => [state, dispatch], [state])

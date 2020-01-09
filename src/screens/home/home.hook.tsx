@@ -19,14 +19,11 @@ function useHome() {
   useEffect(() => {
     async function getWelcomeData() {
       // @ts-ignore
-      const welcomeData = await API.graphql({...graphqlOperation(getWelcomeDataQuery), authMode: 'AMAZON_COGNITO_USER_POOLS'})
-      // const welcomeData = await API.graphql({
-      //   query: getWelcomeDataQuery,
-      //   variables: {},
-      //   // @ts-ignore
-      //   authMode: 'AMAZON_COGNITO_USER_POOLS'
-      // })
-      console.log(welcomeData)
+      const welcomeData = await API.graphql({
+        ...graphqlOperation(getWelcomeDataQuery),
+        // @ts-ignore
+        authMode: 'AMAZON_COGNITO_USER_POOLS',
+      })
       setHomeData(welcomeData)
     }
 
