@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { UserProvider } from './user'
+import { AuthProvider } from './auth'
 
 type StateProviderProps = {
   children: JSX.Element
@@ -9,7 +10,9 @@ type StateProviderProps = {
 export default function StateProvider({ children }: StateProviderProps) {
   return (
     <UserProvider>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </UserProvider>
   )
 }

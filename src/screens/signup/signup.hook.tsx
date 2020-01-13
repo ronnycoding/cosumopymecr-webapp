@@ -2,14 +2,67 @@ import * as yup from 'yup'
 import { useState, useEffect } from 'react'
 import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
+import { useMutation } from '@apollo/react-hooks'
 
+import { useAuth } from 'state/auth'
+
+import {
+  CREATE_USER_BY_EMAIL,
+  CREATE_USER_BY_PHONE_NUMBER,
+} from './singup.graphql'
+
+interface SingUpByEmailProps {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+}
+
+interface SingUpByPhoneNumberProps {
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  password: string
+}
 
 export default function useSignUp() {
+  const { setAuth } = useAuth()
   const [ useConfirmationCode, setUseConfirmationCode ] = useState(false)
   const [ confirmationCode, setConfirmationCode ] = useState('')
   const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
   const [ displaySuccess, setDisplaySuccess ] = useState(false)
   const [ redirectToLogin, setRedirectToLogin ] = useState(false)
+
+  //SignUp state
+  const [ firstName, setFirstName ] = useState('')
+  const [ lastName, setLastName ] = useState('')
+  const [ email, setEmail ] = useState('')
+  const [ phoneNumber, setPhoneNumber ] = useState('')
+  const [ password, setPassword ] = useState('')
+
+  const [signUpByEmail, { error: signUpByEmailError, data: signUpByEmailData }] = useMutation<
+    SingUpByEmailProps,
+    SingUpByEmailProps
+  >(CREATE_USER_BY_EMAIL, {
+    variables: {
+      firstName,
+      lastName,
+      email,
+      password
+    }
+  })
+
+  const [signUpByPhoneNumber, { error: signUpByPhoneNumberError, data: signUpByPhoneNumberData }] = useMutation<
+    SingUpByPhoneNumberProps,
+    SingUpByPhoneNumberProps
+  >(CREATE_USER_BY_PHONE_NUMBER, {
+    variables: {
+      firstName,
+      lastName,
+      phoneNumber,
+      password
+    }
+  })
 
   const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
@@ -54,8 +107,8 @@ export default function useSignUp() {
     onSubmit: async (values) => {
       const { firstName, lastName, authentication, password, authenticationMethod } = values
       const { email, phoneNumber } = authenticationMethod
-
-      const username = authentication === 'email' ? email : `+506${phoneNumber}`
+      const isAuthenticatedByEmail = authentication === 'email'
+      const username = isAuthenticatedByEmail ? email : `+506${phoneNumber}`
 
       try {
         await Auth.signUp({
@@ -66,8 +119,24 @@ export default function useSignUp() {
             family_name: lastName,
           }
         })
+
+        setFirstName(firstName)
+        setLastName(lastName)
+
+        if (isAuthenticatedByEmail) {
+          setEmail(email)
+          setPassword(password)
+          signUpByEmail()
+        } else {
+          setPhoneNumber(phoneNumber)
+          setPassword(password)
+          signUpByPhoneNumber()
+        }
+
         setUseConfirmationCode(true)
-      } catch ({ code, message }) {
+      } catch (err) {
+        const { code, message } = err
+        console.log(err)
         setDisplayError({ code, message })
         formal.reset()
       }
@@ -117,6 +186,29 @@ export default function useSignUp() {
       .catch(({ code, message }) => handleSetErrorConfirmationCode(code, message))
     }
   }, [confirmationCode, formal.values])
+
+  useEffect(() => {
+    console.log({
+      signUpByEmailError,
+      signUpByPhoneNumberError
+    })
+  }, [signUpByEmailError, signUpByPhoneNumberError])
+
+  useEffect(() => {
+    if (signUpByEmailData) {
+      // @ts-ignore
+      const { token } = signUpByEmailData
+      setAuth(token)
+    }
+  }, [signUpByEmailData])
+
+  useEffect(() => {
+    if (signUpByPhoneNumberData) {
+      // @ts-ignore
+      const { token } = signUpByPhoneNumberData
+      setAuth(token)
+    }
+  }, [signUpByPhoneNumberData])
 
   return {
     handleSignUp,

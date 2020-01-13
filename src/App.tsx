@@ -12,6 +12,7 @@ import WelcomeScreen from 'screens/welcome'
 import ForgotPasswordScreen from 'screens/forgot-password'
 import LoginScreen from 'screens/login'
 import SignUpScreen from 'screens/signup'
+import ProfileScreen from 'screens/profile'
 
 configureAmplify()
 
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route exact path="/">
             <WelcomeScreen />
+          </Route>
+          <Route exact path="/profile">
+            <ProfileScreen />
           </Route>
           <Route path="*">
             <Redirect to="/" />

@@ -20,10 +20,6 @@ interface IContextProps {
 const UserContext = createContext({} as IContextProps)
 
 function userReducer(state: any, action: any) {
-  console.log({
-    state,
-    action,
-  })
   switch (action.type) {
     case 'SET_USER':
         return {

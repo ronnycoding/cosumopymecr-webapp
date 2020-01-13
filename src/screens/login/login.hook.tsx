@@ -4,11 +4,14 @@ import useFormal from '@kevinwolf/formal'
 import { Auth } from 'aws-amplify'
 
 import { useUser } from 'state/user'
+// TODO: implement set token
+// import { useAuth } from 'state/auth'
 
 export default function useLogin() {
   const {
     setUser,
   } = useUser()
+  // const { setAuth } = useAuth()
   const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
   const [ redirectToSignUp, setRedirectToSignUp ] = useState(false)
   const [ disableSubmit, setDisableSubmit ] = useState(false)

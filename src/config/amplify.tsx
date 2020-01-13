@@ -3,5 +3,6 @@ import Amplify from 'aws-amplify'
 import envVars from './env'
 
 export default function configureAmplify() {
-  Amplify.configure(envVars)
+  const { aws } = envVars
+  Amplify.configure(aws)
 }

@@ -1,52 +1,75 @@
 const ENV = {
+  local: {
+    aws: {
+      Auth: {
+        identityPoolId: 'us-east-1:564e15ca-2106-4397-9ad2-839736889053',
+        region: 'us-east-1',
+        userPoolId: 'us-east-1_ZSomzgcCZ',
+        userPoolWebClientId: '4k9d8g6cr55ifk0e0ndm5e4bvv',
+      },
+      Storage: {
+        bucket: 'loyaltyadvertisingalicea',
+      },
+    },
+    coreApi: {
+      uri: 'http://localhost:8070',
+    }
+  },
   development: {
-    Auth: {
-      identityPoolId: 'us-east-1:0fa90009-c115-4ea7-afa9-748eadc66c44',
-      region: 'us-east-1',
-      userPoolId: 'us-east-1_LQvZhtgL8',
-      userPoolWebClientId: '1agnhgp7g3g0n6m8k70i1c625g',
+    aws: {
+      Auth: {
+        identityPoolId: 'us-east-1:564e15ca-2106-4397-9ad2-839736889053',
+        region: 'us-east-1',
+        userPoolId: 'us-east-1_ZSomzgcCZ',
+        userPoolWebClientId: '4k9d8g6cr55ifk0e0ndm5e4bvv',
+      },
+      Storage: {
+        bucket: 'loyaltyadvertisingalicea',
+      },
     },
-    Storage: {
-      bucket: 'loyaltyadvertisingalicea',
-    },
-    aws_appsync_graphqlEndpoint: 'https://2x6qy7awjjcbdlonpuhdsffen4.appsync-api.us-east-1.amazonaws.com/graphql',
-    aws_appsync_region: 'us-east-1',
-    aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
+    coreApi: {
+      uri: '',
+    }
   },
   staging: {
-    Auth: {
-      identityPoolId: '',
-      region: '',
-      userPoolId: '',
-      userPoolWebClientId: '',
+    aws: {
+      Auth: {
+        identityPoolId: '',
+        region: '',
+        userPoolId: '',
+        userPoolWebClientId: '',
+      },
+      Storage: {
+        bucket: '',
+      },
     },
-    Storage: {
-      bucket: '',
-    },
-    aws_appsync_graphqlEndpoint: '',
-    aws_appsync_region: '',
-    aws_appsync_authenticationType: '', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
+    coreApi: {
+      uri: '',
+    }
   },
   production: {
-    Auth: {
-      identityPoolId: '',
-      region: '',
-      userPoolId: '',
-      userPoolWebClientId: '',
+    aws: {
+      Auth: {
+        identityPoolId: '',
+        region: '',
+        userPoolId: '',
+        userPoolWebClientId: '',
+      },
+      Storage: {
+        bucket: '',
+      },
     },
-    Storage: {
-      bucket: '',
+    coreApi: {
+      uri: '',
     },
-    aws_appsync_graphqlEndpoint: '',
-    aws_appsync_region: '',
-    aws_appsync_authenticationType: '', // You have configured Auth with Amazon Cognito User Pool ID and Web Client Id
-  }
+  },
 }
 
 function getEnvVars(env = '') {
   if (env === 'production') return ENV.production
   if (env === 'staging') return ENV.staging
-  return ENV.development
+  if (env === 'development') return ENV.development
+  return ENV.local
 }
 
 export default getEnvVars(process.env.REACT_APP_STAGE)

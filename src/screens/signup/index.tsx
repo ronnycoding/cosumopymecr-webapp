@@ -53,7 +53,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
   const classes = useStyles()
-  // @ts-ignore
   const {
     handleSignUp,
     formal,
