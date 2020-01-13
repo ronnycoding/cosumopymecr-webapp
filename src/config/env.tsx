@@ -28,7 +28,7 @@ const ENV = {
       },
     },
     coreApi: {
-      uri: '',
+      uri: 'http://18.209.87.99:4000',
     }
   },
   staging: {
