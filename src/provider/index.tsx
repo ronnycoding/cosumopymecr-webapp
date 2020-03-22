@@ -12,14 +12,10 @@ type AppProviderProps = {
 
 export default function AppProvider({ children }: AppProviderProps) {
   return (
-    <ApolloProvider
-      // @ts-ignore
-      client={apolloClient}>
+    <ApolloProvider client={apolloClient}>
       <StateProvider>
         <GlobalThemeOverride>
-          <BrowserRouter>
-            {children}
-          </BrowserRouter>
+          <BrowserRouter>{children}</BrowserRouter>
         </GlobalThemeOverride>
       </StateProvider>
     </ApolloProvider>

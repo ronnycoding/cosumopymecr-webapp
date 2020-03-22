@@ -1,51 +1,29 @@
 const ENV = {
-  local: {
-    aws: {
-      Auth: {
-        identityPoolId: 'us-east-1:564e15ca-2106-4397-9ad2-839736889053',
-        region: 'us-east-1',
-        userPoolId: 'us-east-1_ZSomzgcCZ',
-        userPoolWebClientId: '4k9d8g6cr55ifk0e0ndm5e4bvv',
-      },
-      Storage: {
-        bucket: 'loyaltyadvertisingalicea',
-      },
-    },
-    coreApi: {
-      uri: 'http://localhost:8070',
-    }
-  },
   development: {
     aws: {
       Auth: {
-        identityPoolId: 'us-east-1:564e15ca-2106-4397-9ad2-839736889053',
+        identityPoolId: 'us-east-1:10d55aba-74c6-4581-957e-8703b535d011',
         region: 'us-east-1',
-        userPoolId: 'us-east-1_ZSomzgcCZ',
-        userPoolWebClientId: '4k9d8g6cr55ifk0e0ndm5e4bvv',
-      },
-      Storage: {
-        bucket: 'loyaltyadvertisingalicea',
+        userPoolId: 'us-east-1_HFHwlhVNT',
+        userPoolWebClientId: '49la7dn3p80baqt8dkpp4ojqci',
       },
     },
     coreApi: {
-      uri: 'http://18.209.87.99:4000',
-    }
+      uri: 'http://localhost:1337',
+    },
   },
   staging: {
     aws: {
       Auth: {
-        identityPoolId: '',
-        region: '',
-        userPoolId: '',
-        userPoolWebClientId: '',
-      },
-      Storage: {
-        bucket: '',
+        identityPoolId: 'us-east-1:10d55aba-74c6-4581-957e-8703b535d011',
+        region: 'us-east-1',
+        userPoolId: 'us-east-1_HFHwlhVNT',
+        userPoolWebClientId: '49la7dn3p80baqt8dkpp4ojqci',
       },
     },
     coreApi: {
-      uri: '',
-    }
+      uri: 'https://consumopymecr.herokuapp.com',
+    },
   },
   production: {
     aws: {
@@ -68,8 +46,7 @@ const ENV = {
 function getEnvVars(env = '') {
   if (env === 'production') return ENV.production
   if (env === 'staging') return ENV.staging
-  if (env === 'development') return ENV.development
-  return ENV.local
+  return ENV.development
 }
 
 export default getEnvVars(process.env.REACT_APP_STAGE)
