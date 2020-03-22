@@ -12,6 +12,8 @@ type AppProviderProps = {
 
 export default function AppProvider({ children }: AppProviderProps) {
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     <ApolloProvider client={apolloClient}>
       <StateProvider>
         <GlobalThemeOverride>
