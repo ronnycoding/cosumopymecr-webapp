@@ -10,21 +10,15 @@ import { useUser } from 'state/user'
 import useFackeData from 'fake'
 
 export default function Welcome() {
-  const {
-    getDataUsers,
-  } = useFackeData()
+  const { getDataUsers } = useFackeData()
 
-  const {
-    user,
-    resetUser: handleLogout,
-  } = useUser()
+  const { user, resetUser: handleLogout } = useUser()
 
   const [dataUsers, setDataUsers] = useState([])
 
   useEffect(() => {
-    getDataUsers(18)
-      .then(({results}: any) => setDataUsers(results))
-  }, [])
+    getDataUsers(18).then(({ results }: any) => setDataUsers(results))
+  }, [getDataUsers])
 
   return (
     <Container>
@@ -33,7 +27,9 @@ export default function Welcome() {
       <Box mt={2}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={1}>
-            {dataUsers.map(({ login }: any) => <ProfileCard key={login.uuid} image={'https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg'} />)}
+            {dataUsers.map(({ login }: any) => (
+              <ProfileCard key={login.uuid} image="https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg" />
+            ))}
           </Grid>
         </Grid>
       </Box>

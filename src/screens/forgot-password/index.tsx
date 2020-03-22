@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -8,16 +9,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 // @ts-ignore
 import ReactCodeInput from 'react-code-input'
 import { Link, Redirect } from 'react-router-dom'
-
-// @ts-ignore
-import PhoneInput from 'react-phone-input-2'
 
 import SnackBarNotification from 'components/snackbar-notification'
 import Copyright from 'components/copyright'
@@ -29,7 +24,7 @@ import './forgotpassword.css'
 import useForgetPassword from './forgotPassword.hook'
 import useConfirmationCode from './confirmationCode.hook'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -54,19 +49,25 @@ export default function ForgotPasswordScreen() {
   const classes = useStyles()
   // @ts-ignore
   const {
-    handleForgetPassword,
-    formalForgotPassword,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+    values,
+    errors,
     displayErrorForgotPassword,
     handleCleanError,
     redirectToLogin,
     displaySuccess,
-    disableSubmit,
     enableConfirmationCode,
   } = useForgetPassword()
 
   const {
+    handleConfirmationCodeChange,
+    confirmationCodeValues,
+    confirmationCodeErrors,
+    confirmationCodeSetFieldValue,
     handleConfirmationCode,
-    formalConfirmationCode,
     disableConfirmationCodeSubmit,
     displayErrorConfirmationCode,
     displaySuccessConfirmationCode,
@@ -74,26 +75,16 @@ export default function ForgotPasswordScreen() {
     redirectToLogin: redirectToLoginConfirmationCode,
   } = useConfirmationCode()
 
-  const {
-    user,
-  } = useUser()
+  const { user } = useUser()
 
-  function handleOnChangePhoneNumber(value: string, data: any) {
-    formalForgotPassword.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
-    formalConfirmationCode.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
+  if (Object.keys(user).length) return <Redirect to="/home" />
+
+  if (redirectToLogin || redirectToLoginConfirmationCode) return <Redirect to="/login" />
+
+  const handleSetEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e.target.value)
+    handleConfirmationCodeChange(e.target.value)
   }
-
-  function handleOnChangeEmail(e: any) {
-    formalForgotPassword.change("authenticationMethod", { phoneNumber: '', email: e.target.value})
-    formalConfirmationCode.change("authenticationMethod", { phoneNumber: '', email: e.target.value})
-  }
-
-  // @ts-ignore
-  const phoneNumberError = formalForgotPassword.errors['authenticationMethod.email'] || ''
-
-  if (Object.keys(user).length) return <Redirect to={'/home'} />
-
-  if (redirectToLogin || redirectToLoginConfirmationCode) return <Redirect to={'/login'} />
 
   return (
     <Container component="main" maxWidth="xs">
@@ -103,95 +94,45 @@ export default function ForgotPasswordScreen() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {'Recuperar Contraseña'}
+          Recuperar Contraseña
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleForgetPassword}>
-          <Grid container spacing={2}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+          <Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <Select
-                  value={formalForgotPassword.values.authentication}
-                  onChange={e => {
-                    formalForgotPassword.change("authentication", e.target.value)
-                    formalConfirmationCode.change("authentication", e.target.value)
-                  }}
-                  displayEmpty
-                  fullWidth
-                  variant="outlined"
-                  disabled={enableConfirmationCode}
-                >
-                  <MenuItem value="" disabled>
-                    {'Choose an authentication method'}
-                  </MenuItem>
-                  <MenuItem value={'email'}>Email</MenuItem>
-                  <MenuItem value={'phoneNumber'}>Phone Number</MenuItem>
-                </Select>
-                {formalForgotPassword.errors.authentication && <FormHelperText error variant="outlined">{formalForgotPassword.errors.authentication}</FormHelperText>}
-              </FormControl>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Correo Electrónico"
+                name="email"
+                autoComplete="email"
+                value={values.email}
+                onChange={handleSetEmail}
+                error={Boolean(errors.email)}
+                helperText={errors.email}
+                disabled={enableConfirmationCode}
+              />
             </Grid>
-            {formalForgotPassword.values.authentication && formalForgotPassword.values.authentication === 'email' && (
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formalForgotPassword.values.authenticationMethod.email}
-                  onChange={handleOnChangeEmail}
-                  // @ts-ignore
-                  error={Boolean(formalForgotPassword.errors['authenticationMethod.email'])}
-                  // @ts-ignore
-                  helperText={formalForgotPassword.errors['authenticationMethod.email']}
-                  disabled={enableConfirmationCode}
-                />
-              </Grid>
-            )}
-            {formalForgotPassword.values.authentication && formalForgotPassword.values.authentication === 'phoneNumber' && (
-              <Grid item xs={12}>
-                <PhoneInput
-                  containerStyle={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                  }}
-                  inputProps={{
-                    name: 'phoneNumber',
-                    required: true,
-                    autoFocus: false,
-                  }}
-                  inputClass="MuiInputBase-input MuiOutlinedInput-input"
-                  country={'cr'}
-                  onlyCountries={['cr']}
-                  localization={{es: 'España'}}
-                  inputStyle={{
-                    height: '1.1875em',
-                    width: '100%',
-                    // animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
-                  }}
-                  countryCodeEditable={false}
-                  value={formalForgotPassword.values.authenticationMethod && formalForgotPassword.values.authenticationMethod.phoneNumber}
-                  onChange={handleOnChangePhoneNumber}
-                  disabled={enableConfirmationCode}
-                />
-                {/* @ts-ignore */}
-                {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
-              </Grid>
-            )}
             {enableConfirmationCode && (
               <Grid item xs={12}>
                 <ReactCodeInput
-                  type='number'
+                  type="number"
                   fields={6}
-                  onChange={(valConfirmationCode: any) => formalConfirmationCode.change("confirmationCode", valConfirmationCode)}
+                  onChange={(valConfirmationCode: string) =>
+                    confirmationCodeSetFieldValue('confirmationCode', valConfirmationCode)
+                  }
                   disabled={disableConfirmationCodeSubmit}
                 />
-                <FormHelperText variant="outlined">{'Enter your confirmation code'}</FormHelperText>
-                {formalConfirmationCode.errors.confirmationCode && <FormHelperText error variant="outlined">{formalConfirmationCode.errors.confirmationCode}</FormHelperText>}
+                <FormHelperText variant="outlined">Enter your confirmation code</FormHelperText>
+                {confirmationCodeErrors.confirmationCode && (
+                  <FormHelperText error variant="outlined">
+                    {confirmationCodeErrors.confirmationCode}
+                  </FormHelperText>
+                )}
               </Grid>
             )}
-            {formalConfirmationCode.values.confirmationCode.length === 6 && (
+            {confirmationCodeValues.confirmationCode.length === 6 && (
               <Grid item xs={12}>
                 <TextField
                   variant="outlined"
@@ -202,11 +143,15 @@ export default function ForgotPasswordScreen() {
                   type="password"
                   id="new-password"
                   autoComplete="new-password"
-                  value={formalConfirmationCode.values.password}
-                  onChange={(e: any) => formalConfirmationCode.change("password", e.target.value)}
+                  value={confirmationCodeValues.password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => confirmationCodeSetFieldValue('password', e.target.value)}
                   disabled={disableConfirmationCodeSubmit}
                 />
-                {formalConfirmationCode.errors.password && <FormHelperText error variant="outlined">{formalConfirmationCode.errors.password}</FormHelperText>}
+                {confirmationCodeErrors.password && (
+                  <FormHelperText error variant="outlined">
+                    {confirmationCodeErrors.password}
+                  </FormHelperText>
+                )}
               </Grid>
             )}
           </Grid>
@@ -220,7 +165,7 @@ export default function ForgotPasswordScreen() {
               onClick={() => handleConfirmationCode()}
               disabled={disableConfirmationCodeSubmit}
             >
-              {'Confirm Code'}
+              Enviar código de confirmación
             </Button>
           ) : (
             <Button
@@ -229,42 +174,32 @@ export default function ForgotPasswordScreen() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              disabled={disableSubmit}
+              disabled={!isValid || isSubmitting}
             >
-              {'Recovery Password'}
+              Recuperar contraseña
             </Button>
           )}
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/login">
-                Already have an account? Sign in
-              </Link>
+              <Link to="/login">¿Ya tienes una cuenta? haz click aquí</Link>
             </Grid>
           </Grid>
         </form>
       </div>
       {displayErrorConfirmationCode.message !== '' && (
-        <SnackBarNotification
-          variant='error'
-          message={displayErrorConfirmationCode.message}
-        />
+        <SnackBarNotification variant="error" message={displayErrorConfirmationCode.message} />
       )}
       {displayErrorForgotPassword.message !== '' && (
         <SnackBarNotification
-          variant='error'
+          variant="error"
           message={displayErrorForgotPassword.message}
           onCloseNotification={handleCleanError}
         />
       )}
-      {displaySuccess !== '' && (
-        <SnackBarNotification
-          variant='success'
-          message={displaySuccess}
-        />
-      )}
+      {displaySuccess !== '' && <SnackBarNotification variant="success" message={displaySuccess} />}
       {displaySuccessConfirmationCode !== '' && (
         <SnackBarNotification
-          variant='success'
+          variant="success"
           message={displaySuccessConfirmationCode}
           onCloseNotification={handleSuccessPasswordUpdated}
         />

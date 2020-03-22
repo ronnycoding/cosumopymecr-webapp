@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -9,16 +10,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
 import FormHelperText from '@material-ui/core/FormHelperText'
 // @ts-ignore
 import ReactCodeInput from 'react-code-input'
 import { Link, Redirect } from 'react-router-dom'
-
-// @ts-ignore
-import PhoneInput from 'react-phone-input-2'
 
 import SnackBarNotification from 'components/snackbar-notification'
 import Copyright from 'components/copyright'
@@ -30,7 +25,7 @@ import './signup.css'
 
 import useSignUp from './signup.hook'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -54,9 +49,13 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles()
   const {
+    isSubmitting,
+    isValid,
+    errors,
+    handleChange,
+    values,
     handleSignUp,
-    formal,
-    useConfirmationCode,
+    isEnableConfirmationCode,
     setConfirmationCode,
     displayError,
     handleCleanError,
@@ -65,24 +64,20 @@ export default function SignUp() {
     redirectToLogin,
   } = useSignUp()
 
-  const {
-    user,
-  } = useUser()
+  const { user } = useUser()
 
-  function handleOnChangePhoneNumber(value: string, data: any) {
-    formal.change("authenticationMethod", { phoneNumber: value.replace(/[^0-9]+/g,'').slice(data.dialCode.length), email: '' })
-  }
+  // useEffect(() => {
+  //   console.log(
+  //     isSubmitting,
+  //     isValid,
+  //     errors,
+  //     values,
+  //   )
+  // }, [isSubmitting, isValid, errors, values])
 
-  function handleOnChangeEmail(e: any) {
-    formal.change("authenticationMethod", { phoneNumber: '', email: e.target.value})
-  }
+  if (Object.keys(user).length) return <Redirect to="/home" />
 
-  // @ts-ignore
-  const phoneNumberError = formal.errors['authenticationMethod.email'] || ''
-
-  if (Object.keys(user).length) return <Redirect to={'/home'} />
-
-  if (redirectToLogin) return <Redirect to={'/login'} />
+  if (redirectToLogin) return <Redirect to="/login" />
 
   return (
     <Container component="main" maxWidth="xs">
@@ -92,7 +87,7 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {'Registrate'}
+          Registrate
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSignUp}>
           <Grid container spacing={2}>
@@ -104,13 +99,13 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="firstName"
-                label="First Name"
+                label="Nombre"
                 autoFocus
-                value={formal.values.firstName}
-                onChange={e => formal.change("firstName", e.target.value)}
-                error={Boolean(formal.errors.firstName)}
-                helperText={formal.errors.firstName && formal.errors.firstName}
-                disabled={useConfirmationCode}
+                value={values.firstName}
+                onChange={handleChange}
+                error={Boolean(errors.firstName)}
+                helperText={errors.firstName}
+                disabled={isEnableConfirmationCode}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -119,140 +114,82 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="lastName"
-                label="Last Name"
+                label="Apellido"
                 name="lastName"
                 autoComplete="lname"
-                value={formal.values.lastName}
-                onChange={e => formal.change("lastName", e.target.value)}
-                error={Boolean(formal.errors.lastName)}
-                helperText={formal.errors.lastName && formal.errors.lastName}
-                disabled={useConfirmationCode}
+                value={values.lastName}
+                onChange={handleChange}
+                error={Boolean(errors.lastName)}
+                helperText={errors.lastName}
+                disabled={isEnableConfirmationCode}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <Select
-                  value={formal.values.authentication}
-                  onChange={e => formal.change("authentication", e.target.value)}
-                  displayEmpty
-                  fullWidth
-                  variant="outlined"
-                  disabled={useConfirmationCode}
-                >
-                  <MenuItem value="" disabled>
-                    {'Choose an authentication method'}
-                  </MenuItem>
-                  <MenuItem value={'email'}>Email</MenuItem>
-                  <MenuItem value={'phoneNumber'}>Phone Number</MenuItem>
-                </Select>
-                {formal.errors.authentication && <FormHelperText error variant="outlined">{formal.errors.authentication}</FormHelperText>}
-              </FormControl>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Correo Electrónico"
+                name="email"
+                autoComplete="email"
+                value={values.email}
+                onChange={handleChange}
+                error={Boolean(errors.email)}
+                helperText={errors.email}
+                disabled={isEnableConfirmationCode}
+              />
             </Grid>
-            {formal.values.authentication && formal.values.authentication === 'email' && (
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formal.values.authenticationMethod.email}
-                  onChange={handleOnChangeEmail}
-                  // @ts-ignore
-                  error={Boolean(formal.errors['authenticationMethod.email'])}
-                  // @ts-ignore
-                  helperText={formal.errors['authenticationMethod.email']}
-                  disabled={useConfirmationCode}
-                />
-              </Grid>
-            )}
-            {formal.values.authentication && formal.values.authentication === 'phoneNumber' && (
-              <Grid item xs={12}>
-                <PhoneInput
-                  containerStyle={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                  }}
-                  inputProps={{
-                    name: 'phoneNumber',
-                    required: true,
-                    autoFocus: false,
-                  }}
-                  inputClass="MuiInputBase-input MuiOutlinedInput-input"
-                  country={'cr'}
-                  onlyCountries={['cr']}
-                  localization={{es: 'España'}}
-                  inputStyle={{
-                    height: '1.1875em',
-                    width: '100%',
-                    // animationName: 'MuiInputBase-keyframes-auto-fill-cancel',
-                  }}
-                  countryCodeEditable={false}
-                  value={formal.values.authenticationMethod && formal.values.authenticationMethod.phoneNumber}
-                  onChange={handleOnChangePhoneNumber}
-                  disabled={useConfirmationCode}
-                />
-                {/* @ts-ignore */}
-                {phoneNumberError && <FormHelperText error variant="outlined">{phoneNumberError}</FormHelperText>}
-              </Grid>
-            )}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Contraseña"
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={e => formal.change("password", e.target.value)}
-                error={Boolean(formal.errors.password)}
-                helperText={formal.errors.password && formal.errors.password}
-                disabled={useConfirmationCode}
+                onChange={handleChange}
+                value={values.password}
+                error={Boolean(errors.password)}
+                helperText={errors.password}
+                disabled={isEnableConfirmationCode}
               />
             </Grid>
-            {useConfirmationCode && (
+            {isEnableConfirmationCode && (
               <Grid item xs={12}>
-                <ReactCodeInput type='number' fields={6} onChange={setConfirmationCode} />
-                <FormHelperText variant="outlined">{'Enter your confirmation code'}</FormHelperText>
+                <ReactCodeInput type="number" fields={6} onChange={setConfirmationCode} />
+                <FormHelperText variant="outlined">Ingresa tu código de confirmación.</FormHelperText>
               </Grid>
             )}
           </Grid>
-          {!useConfirmationCode && (
+          {!isEnableConfirmationCode && (
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              disabled={useConfirmationCode}
+              disabled={!isValid || isSubmitting}
             >
-              Sign Up
+              Registrate
             </Button>
           )}
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/login">
-                Already have an account? Sign in
-              </Link>
+              <Link to="/login">¿Ya tienes una contraseña? haz click aquí</Link>
             </Grid>
           </Grid>
         </form>
       </div>
       {displayError.message !== '' && (
-        <SnackBarNotification
-          variant='error'
-          message={displayError.message}
-          onCloseNotification={handleCleanError}
-        />
+        <SnackBarNotification variant="error" message={displayError.message} onCloseNotification={handleCleanError} />
       )}
       {displaySuccess && (
         <SnackBarNotification
-          variant='success'
-          message={'Account Created Successfully'}
+          variant="success"
+          message="Account Created Successfully"
           onCloseNotification={handleAccountCreatedSuccessfully}
         />
       )}

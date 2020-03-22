@@ -1,15 +1,12 @@
-import * as yup from 'yup'
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { useState, useEffect } from 'react'
-import useFormal from '@kevinwolf/formal'
+import { useFormik } from 'formik'
 import { Auth } from 'aws-amplify'
 import { useMutation } from '@apollo/react-hooks'
 
 import { useAuth } from 'state/auth'
 
-import {
-  CREATE_USER_BY_EMAIL,
-  CREATE_USER_BY_PHONE_NUMBER,
-} from './singup.graphql'
+import { CREATE_USER_BY_EMAIL } from './singup.graphql'
 
 interface SingUpByEmailProps {
   firstName: string
@@ -18,27 +15,19 @@ interface SingUpByEmailProps {
   password: string
 }
 
-interface SingUpByPhoneNumberProps {
-  firstName: string
-  lastName: string
-  phoneNumber: string
-  password: string
-}
-
 export default function useSignUp() {
   const { setAuth } = useAuth()
-  const [ useConfirmationCode, setUseConfirmationCode ] = useState(false)
-  const [ confirmationCode, setConfirmationCode ] = useState('')
-  const [ displayError, setDisplayError ] =  useState({ code: '', message: '' })
-  const [ displaySuccess, setDisplaySuccess ] = useState(false)
-  const [ redirectToLogin, setRedirectToLogin ] = useState(false)
+  const [isEnableConfirmationCode, setIsEnableConfirmationCode] = useState(false)
+  const [confirmationCode, setConfirmationCode] = useState('')
+  const [displayError, setDisplayError] = useState({ code: '', message: '' })
+  const [displaySuccess, setDisplaySuccess] = useState(false)
+  const [redirectToLogin, setRedirectToLogin] = useState(false)
 
-  //SignUp state
-  const [ firstName, setFirstName ] = useState('')
-  const [ lastName, setLastName ] = useState('')
-  const [ email, setEmail ] = useState('')
-  const [ phoneNumber, setPhoneNumber ] = useState('')
-  const [ password, setPassword ] = useState('')
+  // SignUp state
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const [signUpByEmail, { error: signUpByEmailError, data: signUpByEmailData }] = useMutation<
     SingUpByEmailProps,
@@ -48,104 +37,106 @@ export default function useSignUp() {
       firstName,
       lastName,
       email,
-      password
-    }
+      password,
+    },
   })
 
-  const [signUpByPhoneNumber, { error: signUpByPhoneNumberError, data: signUpByPhoneNumberData }] = useMutation<
-    SingUpByPhoneNumberProps,
-    SingUpByPhoneNumberProps
-  >(CREATE_USER_BY_PHONE_NUMBER, {
-    variables: {
-      firstName,
-      lastName,
-      phoneNumber,
-      password
-    }
-  })
-
-  const schema = yup.object().shape({
-    firstName: yup.string().required('First Name is required'),
-    lastName: yup.string().required('Last Name is required'),
-    password: yup
-      .string()
-      .required('No password provided.')
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(
-        /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]/,
-        "Must Contain Minimun 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-      ),
-    authenticationMethod: yup.object().shape({
-      email: yup
-        .string()
-        .when('phoneNumber', {
-            is: '',
-            then: yup.string().email().required('An email is required'),
-            otherwise: yup.string(),
-        }),
-      phoneNumber: yup
-        .string()
-        .when('email', {
-            is: '',
-            then: yup.string().required('A phone number is required'),
-            otherwise: yup.string(),
-        }),
-    }, [['phoneNumber', 'email']]),
-    authentication: yup.string().required('Please choose an authentication method'),
-  })
-  
-  const initialValues = {
-    firstName: '',
-    lastName: '',
-    password: '',
-    authenticationMethod: { email: '', phoneNumber: '' },
-    authentication: '',
+  interface SignUpValidatorProps {
+    firstName: string
+    lastName: string
+    password: string
+    email: string
   }
 
-  const formal = useFormal(initialValues, {
-    schema,
+  const signUpValidator = (values: SignUpValidatorProps) => {
+    // eslint-disable-next-line prefer-const
+    let errors = {}
+    if (!values.email) {
+      // @ts-ignore
+      errors.email = 'Correo Electrónico requerido.'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      // @ts-ignore
+      errors.email = 'Correo Electrónico invalido.'
+    }
+
+    if (!values.firstName) {
+      // @ts-ignore
+      errors.firstName = 'Nombre es requerido.'
+    }
+
+    if (!values.lastName) {
+      // @ts-ignore
+      errors.lastName = 'Apellido es requerido.'
+    }
+
+    if (!values.password) {
+      // @ts-ignore
+      errors.password = 'la contraseña es requerida.'
+    } else if (values.password.length < 8) {
+      // @ts-ignore
+      errors.password = 'la contraseña debe tener un mínimo de 8 caracteres.'
+    }
+
+    return errors
+  }
+
+  const { handleChange, handleSubmit, handleReset, isSubmitting, isValid, values, errors } = useFormik({
+    validateOnChange: true,
+    isInitialValid: false,
+    validate: signUpValidator,
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      password: '',
+      email: '',
+    },
+    // eslint-disable-next-line no-shadow
     onSubmit: async (values) => {
-      const { firstName, lastName, authentication, password, authenticationMethod } = values
-      const { email, phoneNumber } = authenticationMethod
-      const isAuthenticatedByEmail = authentication === 'email'
-      const username = isAuthenticatedByEmail ? email : `+506${phoneNumber}`
+      // eslint-disable-next-line no-shadow
+      const { firstName, lastName, password, email } = values
 
       try {
         await Auth.signUp({
-          username,
+          username: email,
           password,
           attributes: {
             name: firstName,
+            // eslint-disable-next-line @typescript-eslint/camelcase
             family_name: lastName,
-          }
+          },
         })
 
         setFirstName(firstName)
         setLastName(lastName)
-
-        if (isAuthenticatedByEmail) {
-          setEmail(email)
-          setPassword(password)
-          signUpByEmail()
-        } else {
-          setPhoneNumber(phoneNumber)
-          setPassword(password)
-          signUpByPhoneNumber()
-        }
-
-        setUseConfirmationCode(true)
+        setEmail(email)
+        setPassword(password)
+        signUpByEmail()
+        setIsEnableConfirmationCode(true)
       } catch (err) {
         const { code, message } = err
-        console.log(err)
         setDisplayError({ code, message })
-        formal.reset()
+        // if (err.code === 'UserNotConfirmedException') {
+        //     // The error happens if the user didn't finish the confirmation step when signing up
+        //     // In this case you need to resend the code and confirm the user
+        //     // About how to resend the code and confirm the user, please check the signUp part
+        // } else if (err.code === 'PasswordResetRequiredException') {
+        //     // The error happens when the password is reset in the Cognito console
+        //     // In this case you need to call forgotPassword to reset the password
+        //     // Please check the Forgot Password part.
+        // } else if (err.code === 'NotAuthorizedException') {
+        //     // The error happens when the incorrect password is provided
+        // } else if (err.code === 'UserNotFoundException') {
+        //     // The error happens when the supplied username/email does not exist in the Cognito user pool
+        // } else {
+        //     console.log(err);
+        // }
       }
-    }
+    },
   })
 
   // await Auth.resendSignUp(username).then(() => {
   //   console.log('code resent successfully')
-  //   setUseConfirmationCode(true)
+  //   setIsEnableConfirmationCode(true)
   // })
 
   function handleCleanError() {
@@ -161,11 +152,6 @@ export default function useSignUp() {
     setDisplayError({ code, message })
   }
 
-  function handleSignUp(e: any) {
-    e.preventDefault()
-    formal.submit()
-  }
-
   function handleConfirmationCode() {
     setDisplaySuccess(true)
   }
@@ -176,46 +162,45 @@ export default function useSignUp() {
 
   useEffect(() => {
     if (confirmationCode.length === 6) {
-      const { authentication, authenticationMethod } = formal.values
-      const { email, phoneNumber } = authenticationMethod
-      const username = authentication === 'email' ? email : `+506${phoneNumber}`
-      Auth.confirmSignUp(username, confirmationCode, {
+      // eslint-disable-next-line no-shadow
+      const { email } = values
+      Auth.confirmSignUp(email, confirmationCode, {
         // Optional. Force user confirmation irrespective of existing alias. By default set to True.
-        forceAliasCreation: true    
-      }).then(handleConfirmationCode)
-      .catch(({ code, message }) => handleSetErrorConfirmationCode(code, message))
+        forceAliasCreation: true,
+      })
+        .then(handleConfirmationCode)
+        .catch(({ code, message }) => handleSetErrorConfirmationCode(code, message))
     }
-  }, [confirmationCode, formal.values])
+  }, [confirmationCode, values])
 
   useEffect(() => {
-    console.log({
-      signUpByEmailError,
-      signUpByPhoneNumberError
-    })
-  }, [signUpByEmailError, signUpByPhoneNumberError])
+    if (signUpByEmailError) {
+      console.log({
+        signUpByEmailError,
+      })
+    }
+  }, [signUpByEmailError])
 
   useEffect(() => {
     if (signUpByEmailData) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       const { token } = signUpByEmailData
       setAuth(token)
     }
-  }, [signUpByEmailData])
-
-  useEffect(() => {
-    if (signUpByPhoneNumberData) {
-      // @ts-ignore
-      const { token } = signUpByPhoneNumberData
-      setAuth(token)
-    }
-  }, [signUpByPhoneNumberData])
+  }, [setAuth, signUpByEmailData])
 
   return {
-    handleSignUp,
+    values,
+    handleChange,
+    handleReset,
+    isSubmitting,
+    isValid,
+    errors,
+    handleSignUp: handleSubmit,
     handleAccountCreatedSuccessfully,
-    useConfirmationCode,
+    isEnableConfirmationCode,
     setConfirmationCode,
-    formal,
     displayError,
     handleCleanError,
     displaySuccess,
